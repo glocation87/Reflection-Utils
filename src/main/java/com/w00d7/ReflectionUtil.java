@@ -5,7 +5,6 @@ package com.w00d7;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -196,14 +195,8 @@ public class ReflectionUtil
      */
     public static void setFinalField(Object object, String fieldName, Object value)
             throws NoSuchFieldException, IllegalAccessException {
-        Field field = object.getClass().getDeclaredField(fieldName);
+        Field field = getCachedField(object.getClass(), fieldName);
         field.setAccessible(true);
-
-        // Remove the final modifier
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(object, value);
     }
 
