@@ -10,16 +10,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class ReflectionUtil
 {
+    private static final Timer timer = new Timer(true);
     private static final Map<Class<?>, Map<String, Field>> fieldCache = new ConcurrentHashMap<>();
     private static final Map<Class<?>, Map<String, Method>> methodCache = new ConcurrentHashMap<>();
     private static final Logger logger = Logger.getLogger(ReflectionUtil.class.getName());
+    private static final Integer CACHE_RESET_INTERVAL = 10;
 
+    static {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                clearFieldCache();
+                clearMethodCache();
+            }
+        }, TimeUnit.MINUTES.toMillis(CACHE_RESET_INTERVAL), TimeUnit.MINUTES.toMillis(CACHE_RESET_INTERVAL));
+    }
+    
     /**
      * Returns the value of the field from the given instance/object
      * 
@@ -287,6 +303,14 @@ public class ReflectionUtil
         if (type == float.class) return ((Float) value).floatValue();
         if (type == double.class) return ((Double) value).doubleValue();
         return value;
+    }
+
+    public static void clearFieldCache() {
+        fieldCache.clear();
+    }
+    
+    public static void clearMethodCache() {
+        methodCache.clear();
     }
 }   
 
