@@ -1,4 +1,4 @@
-//simple reflection wrapper util class, wirtten by w00d7
+//simple reflection wrapper util class, written by w00d7
 
 package com.w00d7;
 
