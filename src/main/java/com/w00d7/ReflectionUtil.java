@@ -48,7 +48,7 @@ public class ReflectionUtil
 
     public static Object getField(Object object, String fieldName) 
         throws NoSuchFieldException, IllegalAccessException {
-            Field field = object.getClass().getDeclaredField(fieldName);
+            Field field = getCachedField(object.getClass(), fieldName);
             field.setAccessible(true);
             return field.get(object);
     }
@@ -65,7 +65,7 @@ public class ReflectionUtil
 
     public static void setField(Object object, String fieldName, Object value) 
         throws NoSuchFieldException, IllegalAccessException {
-            Field field = object.getClass().getDeclaredField(fieldName);
+            Field field = getCachedField(object.getClass(), fieldName);
             field.setAccessible(true);
             field.set(object, value);
     }
